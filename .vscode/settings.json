@@ -1,0 +1,53 @@
+{
+  "cSpell.words": [
+    "nagminder",
+    "pinterest",
+    "strava",
+    "tiktok",
+    "webextensions",
+    "chromeextensions",
+    "snooze",
+    "mins",
+    "alltime"
+  ],
+  "eslint.workingDirectories": ["."],
+  "eslint.validate": ["javascript"],
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/build": true,
+    "**/dist": true
+  },
+  "files.associations": {
+    "*.json": "jsonc"
+  },
+  "json.schemas": [
+    {
+      "fileMatch": ["manifest.json"],
+      "url": "https://json.schemastore.org/chrome-manifest"
+    }
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "git.ignoreLimitWarning": true
+}

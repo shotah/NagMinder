@@ -1,0 +1,29 @@
+{
+  "name": "nagminder",
+  "version": "1.0.0",
+  "description": "A playful on-page nag bar that tracks your social media time and nudges you to do better",
+  "scripts": {
+    "lint": "eslint . --ext .js --ignore-pattern node_modules --ignore-pattern build --ignore-pattern dist --ignore-pattern messages.js",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "npm run lint && node test/validate.js",
+    "validate": "web-ext lint --source-dir=. --ignore-files=node_modules,build,dist,Makefile,package*.json,*.md,the_plan.md,scripts --warnings-as-errors=false",
+    "clean": "node scripts/clean.js",
+    "build": "npm run clean && node scripts/build.js",
+    "package": "npm run build && node scripts/package.js",
+    "dev": "npm run build && echo \"Load unpacked: ./build/ in chrome://extensions/\"",
+    "help": "node scripts/help.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "productivity",
+    "social-media",
+    "time-tracking"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0",
+    "web-ext": "^7.8.0"
+  }
+}

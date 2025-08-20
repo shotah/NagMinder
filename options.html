@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>NagMinder Options</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+    h1 { margin-top: 0; }
+    label { display: block; margin: 12px 0 6px; font-weight: 600; }
+    input[type="text"], textarea { width: 100%; padding: 8px; font-size: 14px; }
+    .row { margin-bottom: 16px; }
+    .small { color: #666; font-size: 12px; }
+    button { padding: 8px 12px; border-radius: 8px; border: 1px solid #ccc; cursor: pointer; }
+    .btn-row { display: flex; gap: 12px; margin-top: 16px; }
+    .pill { display: inline-block; padding: 6px 8px; background: #f3f3f3; border-radius: 999px; margin: 4px 6px 0 0; }
+    .muted { color: #888; }
+  </style>
+</head>
+<body>
+  <h1>NagMinder Options</h1>
+  <div class="row">
+    <label><input id="enabled" type="checkbox" /> Enable NagMinder</label>
+  </div>
+  <div class="row">
+    <label for="domains">Tracked domains (one per line)</label>
+    <textarea id="domains" rows="8" placeholder="facebook.com
+x.com
+twitter.com
+linkedin.com
+instagram.com
+reddit.com
+tiktok.com
+youtube.com
+strava.com"></textarea>
+    <div class="small">Domains only (no protocol/path). Subdomains are matched automatically.</div>
+  </div>
+  <div class="row">
+    <label for="snooze">Default snooze (minutes)</label>
+    <input id="snooze" type="number" min="1" step="1" />
+  </div>
+  <div class="row">
+    <label for="tick">Tracking interval (seconds)</label>
+    <input id="tick" type="number" min="1" step="1" />
+    <div class="small muted">Lower values are more precise but use slightly more power. 5s is a good default.</div>
+  </div>
+  <div class="btn-row">
+    <button id="save">Save</button>
+    <button id="reset">Reset Counters</button>
+  </div>
+  <p class="small muted">Data: settings sync across Chrome (if enabled). Usage time is stored locally on your device.</p>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

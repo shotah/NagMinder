@@ -1,0 +1,129 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: |
+        npm run lint
+        npm run validate
+        node test/validate.js
+        
+    - name: Create package
+      run: npm run package
+      
+    - name: Get version and package info
+      id: info
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        PACKAGE_FILE=$(ls dist/*.zip)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "package_file=$PACKAGE_FILE" >> $GITHUB_OUTPUT
+        echo "package_name=$(basename $PACKAGE_FILE)" >> $GITHUB_OUTPUT
+        
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: NagMinder v${{ steps.info.outputs.version }}
+        body: |
+          ## NagMinder Chrome Extension v${{ steps.info.outputs.version }}
+          
+          ### 📦 Installation
+          
+          1. Download the ZIP file below
+          2. Go to `chrome://extensions/`
+          3. Enable "Developer mode"
+          4. Click "Load unpacked" and select the extracted folder
+          
+          **Or install from Chrome Web Store:** [Coming Soon]
+          
+          ### 🚀 What's New
+          
+          - Time tracking for social media sites
+          - Today, week, month, year, and all-time stats
+          - Expandable nag bar with funny messages
+          - Snooze and pause functionality
+          - Configurable domains and settings
+          
+          ### 📋 Requirements
+          
+          - Chrome or Chromium-based browser
+          - Manifest V3 support
+          
+          ---
+          
+          **Package size:** $(du -h ${{ steps.info.outputs.package_file }} | cut -f1)
+          **Build date:** $(date -u)
+        draft: false
+        prerelease: false
+        
+    - name: Upload package to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.info.outputs.package_file }}
+        asset_name: ${{ steps.info.outputs.package_name }}
+        asset_content_type: application/zip
+
+  # Future: Auto-publish to Chrome Web Store
+  # chrome-web-store:
+  #   runs-on: ubuntu-latest
+  #   needs: release
+  #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+  #   
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+  #     
+  #   - name: Setup Node.js
+  #     uses: actions/setup-node@v4
+  #     with:
+  #       node-version: '20.x'
+  #       cache: 'npm'
+  #       
+  #   - name: Install dependencies
+  #     run: npm ci
+  #     
+  #   - name: Create package
+  #     run: npm run package
+  #     
+  #   - name: Publish to Chrome Web Store
+  #     uses: PlasmoHQ/bpp@v3
+  #     with:
+  #       keys: ${{ secrets.SUBMIT_KEYS }}
+  #       artifact: dist/*.zip
+  #       
+  #   # Alternative using chrome-webstore-upload-cli:
+  #   # - name: Publish to Chrome Web Store
+  #   #   run: |
+  #   #     npx chrome-webstore-upload-cli upload \
+  #   #       --source dist/*.zip \
+  #   #       --extension-id ${{ secrets.CHROME_EXTENSION_ID }} \
+  #   #       --client-id ${{ secrets.CHROME_CLIENT_ID }} \
+  #   #       --client-secret ${{ secrets.CHROME_CLIENT_SECRET }} \
+  #   #       --refresh-token ${{ secrets.CHROME_REFRESH_TOKEN }}

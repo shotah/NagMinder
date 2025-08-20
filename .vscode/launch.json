@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Chrome with Extension",
+      "type": "chrome",
+      "request": "launch",
+      "url": "chrome://extensions/",
+      "webRoot": "${workspaceFolder}",
+      "userDataDir": "${workspaceFolder}/.chrome-profile",
+      "runtimeArgs": [
+        "--load-extension=${workspaceFolder}/build",
+        "--disable-web-security",
+        "--disable-features=VizDisplayCompositor"
+      ],
+      "preLaunchTask": "Build Extension"
+    },
+    {
+      "name": "Debug Background Script",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}",
+      "pathMapping": {
+        "/": "${workspaceFolder}/build/"
+      }
+    }
+  ]
+}

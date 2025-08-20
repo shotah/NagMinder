@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "streetsidesoftware.code-spell-checker",
+    "ms-vscode.vscode-json",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "ms-vscode.extension-test-runner",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github"
+  ],
+  "unwantedRecommendations": ["ms-vscode.vscode-typescript-next"]
+}
