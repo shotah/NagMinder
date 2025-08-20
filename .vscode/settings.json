@@ -1,14 +1,15 @@
 {
   "cSpell.words": [
+    "alltime",
+    "Blodgett",
+    "chromeextensions",
+    "mins",
     "nagminder",
     "pinterest",
+    "snooze",
     "strava",
     "tiktok",
-    "webextensions",
-    "chromeextensions",
-    "snooze",
-    "mins",
-    "alltime"
+    "webextensions"
   ],
   "eslint.workingDirectories": ["."],
   "eslint.validate": ["javascript"],

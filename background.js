@@ -11,7 +11,7 @@
 /**
  * @typedef {Object} TimeData
  * @property {number} day
- * @property {number} week  
+ * @property {number} week
  * @property {number} month
  * @property {number} year
  * @property {number} allTime
@@ -24,6 +24,11 @@
  * @property {string|null} lastWeek
  * @property {string|null} lastMonth
  * @property {string|null} lastYear
+ * @property {Object.<string, DomainMeta>} domains
+ */
+
+/**
+ * @typedef {Object} DomainMeta
  * @property {number} snoozeUntil
  * @property {boolean} pausedToday
  */
@@ -51,7 +56,7 @@ const DEFAULT_SETTINGS = {
     "snapchat.com",
     "strava.com",
   ],
-  snoozeMinutes: 15
+  snoozeMinutes: 15,
 };
 
 const initialMeta = {
@@ -59,13 +64,12 @@ const initialMeta = {
   lastWeek: null,
   lastMonth: null,
   lastYear: null,
-  snoozeUntil: 0,     // epoch ms
-  pausedToday: false  // do not nag today
+  domains: {}, // per-domain snooze/pause data
 };
 
 // Utility: get active tab URL
 async function getActiveUrl() {
-  const tabs = await chrome.tabs.query({active: true, currentWindow: true});
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tabs.length) return null;
   return tabs[0].url || null;
 }
@@ -84,7 +88,8 @@ function hostnameFromUrl(url) {
  * @returns {Promise<Settings>} Current settings
  */
 async function getSettings() {
-  const { [SETTINGS_KEY]: settings } = await chrome.storage.sync.get(SETTINGS_KEY);
+  const { [SETTINGS_KEY]: settings } =
+    await chrome.storage.sync.get(SETTINGS_KEY);
   return settings ?? DEFAULT_SETTINGS;
 }
 
@@ -110,20 +115,35 @@ async function setMeta(meta) {
   await chrome.storage.local.set({ [META_KEY]: meta });
 }
 
+// Helper functions for per-domain snooze/pause
+function getDomainMeta(meta, domain) {
+  if (!meta.domains) meta.domains = {};
+  if (!meta.domains[domain]) {
+    meta.domains[domain] = { snoozeUntil: 0, pausedToday: false };
+  }
+  return meta.domains[domain];
+}
+
+// Helper function for checking if domain is snoozed (could be useful for future features)
+// function isDomainSnoozed(meta, domain) {
+//   const domainMeta = getDomainMeta(meta, domain);
+//   return Date.now() < domainMeta.snoozeUntil || domainMeta.pausedToday;
+// }
+
 // Date helpers
-function formatDateParts(d=new Date()) {
+function formatDateParts(d = new Date()) {
   const yyyy = d.getFullYear();
-  const mm = String(d.getMonth()+1).padStart(2,'0');
-  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
   const dayKey = `${yyyy}-${mm}-${dd}`;
 
   // ISO week calc
   const tmp = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   const dayNum = tmp.getUTCDay() || 7;
   tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(),0,1));
-  const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1)/7);
-  const weekKey = `${tmp.getUTCFullYear()}-W${String(weekNo).padStart(2,'0')}`;
+  const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(((tmp - yearStart) / 86400000 + 1) / 7);
+  const weekKey = `${tmp.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
 
   const monthKey = `${yyyy}-${mm}`;
   const yearKey = `${yyyy}`;
@@ -146,7 +166,9 @@ async function tick() {
     if (!host) return;
 
     // Only count if host matches tracked domains or subdomains thereof
-    const match = settings.domains.some(d => host === d || host.endsWith("." + d));
+    const match = settings.domains.some(
+      (d) => host === d || host.endsWith("." + d)
+    );
     if (!match) return;
 
     const meta = await getMeta();
@@ -156,25 +178,45 @@ async function tick() {
     // Reset buckets when date boundaries change
     if (meta.lastDay !== dayKey) {
       // reset daily counters per domain
-      for (const h of Object.keys(times)) { times[h].day = 0; }
+      for (const h of Object.keys(times)) {
+        times[h].day = 0;
+      }
       meta.lastDay = dayKey;
-      meta.pausedToday = false; // reset daily pause
+      // reset daily pause for all domains
+      if (meta.domains) {
+        for (const domain of Object.keys(meta.domains)) {
+          meta.domains[domain].pausedToday = false;
+        }
+      }
     }
     if (meta.lastWeek !== weekKey) {
-      for (const h of Object.keys(times)) { times[h].week = 0; }
+      for (const h of Object.keys(times)) {
+        times[h].week = 0;
+      }
       meta.lastWeek = weekKey;
     }
     if (meta.lastMonth !== monthKey) {
-      for (const h of Object.keys(times)) { times[h].month = 0; }
+      for (const h of Object.keys(times)) {
+        times[h].month = 0;
+      }
       meta.lastMonth = monthKey;
     }
     if (meta.lastYear !== yearKey) {
-      for (const h of Object.keys(times)) { times[h].year = 0; }
+      for (const h of Object.keys(times)) {
+        times[h].year = 0;
+      }
       meta.lastYear = yearKey;
     }
 
     if (!times[host]) {
-      times[host] = { day: 0, week: 0, month: 0, year: 0, allTime: 0, lastActive: Date.now() };
+      times[host] = {
+        day: 0,
+        week: 0,
+        month: 0,
+        year: 0,
+        allTime: 0,
+        lastActive: Date.now(),
+      };
     }
 
     // Increment by tickSeconds
@@ -190,8 +232,21 @@ async function tick() {
     await setMeta(meta);
 
     // Notify content scripts that data changed (so they can refresh faster)
-    chrome.runtime.sendMessage({ type: "nm_times_updated", host });
-
+    try {
+      const tabs = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      if (tabs.length > 0) {
+        chrome.tabs
+          .sendMessage(tabs[0].id, { type: "nm_times_updated", host })
+          .catch(() => {
+            // Content script may not be ready, ignore
+          });
+      }
+    } catch (e) {
+      // Tab may not be accessible, ignore
+    }
   } catch (e) {
     console.error("NagMinder tick error:", e);
   }
@@ -200,30 +255,51 @@ async function tick() {
 // Message handlers (content/options pages)
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   (async () => {
-    if (msg?.type === "nm_get_state") {
-      const [settings, times, meta] = await Promise.all([getSettings(), getTimes(), getMeta()]);
-      sendResponse({ settings, times, meta });
-    } else if (msg?.type === "nm_set_settings") {
-      const settings = await getSettings();
-      const next = { ...settings, ...msg.payload };
-      await setSettings(next);
-      sendResponse({ ok: true });
-    } else if (msg?.type === "nm_snooze") {
-      const meta = await getMeta();
-      const mins = msg?.minutes ?? 15;
-      meta.snoozeUntil = Date.now() + mins * 60 * 1000;
-      await setMeta(meta);
-      sendResponse({ ok: true });
-    } else if (msg?.type === "nm_pause_today") {
-      const meta = await getMeta();
-      meta.pausedToday = true;
-      await setMeta(meta);
-      sendResponse({ ok: true });
-    } else if (msg?.type === "nm_reset_all") {
-      await chrome.storage.local.remove([TIMES_KEY, META_KEY]);
-      sendResponse({ ok: true });
-    } else {
-      sendResponse({ ok: false, error: "unknown_message" });
+    try {
+      if (msg?.type === "nm_get_state") {
+        const [settings, times, meta] = await Promise.all([
+          getSettings(),
+          getTimes(),
+          getMeta(),
+        ]);
+        sendResponse({ settings, times, meta });
+      } else if (msg?.type === "nm_set_settings") {
+        const settings = await getSettings();
+        const next = { ...settings, ...msg.payload };
+        await setSettings(next);
+        sendResponse({ ok: true });
+      } else if (msg?.type === "nm_snooze") {
+        const meta = await getMeta();
+        const mins = msg?.minutes ?? 15;
+        const domain = msg?.domain;
+        if (domain) {
+          const domainMeta = getDomainMeta(meta, domain);
+          domainMeta.snoozeUntil = Date.now() + mins * 60 * 1000;
+          await setMeta(meta);
+          sendResponse({ ok: true });
+        } else {
+          sendResponse({ ok: false, error: "domain_required" });
+        }
+      } else if (msg?.type === "nm_pause_today") {
+        const meta = await getMeta();
+        const domain = msg?.domain;
+        if (domain) {
+          const domainMeta = getDomainMeta(meta, domain);
+          domainMeta.pausedToday = true;
+          await setMeta(meta);
+          sendResponse({ ok: true });
+        } else {
+          sendResponse({ ok: false, error: "domain_required" });
+        }
+      } else if (msg?.type === "nm_reset_all") {
+        await chrome.storage.local.remove([TIMES_KEY, META_KEY]);
+        sendResponse({ ok: true });
+      } else {
+        sendResponse({ ok: false, error: "unknown_message" });
+      }
+    } catch (e) {
+      console.error("NagMinder message handler error:", e);
+      sendResponse({ ok: false, error: e.message });
     }
   })();
   return true; // async

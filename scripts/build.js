@@ -1,28 +1,28 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+import fs from "fs";
+import path from "path";
 
-console.log('🏗️  Building extension...');
+console.log("🏗️  Building extension...");
 
 // Create build directory
-const buildDir = 'build';
+const buildDir = "build";
 if (!fs.existsSync(buildDir)) {
   fs.mkdirSync(buildDir, { recursive: true });
 }
 
 // Files to copy
 const filesToCopy = [
-  'manifest.json',
-  'background.js', 
-  'content.js',
-  'options.html',
-  'options.js',
-  'styles.css'
+  "manifest.json",
+  "background.js",
+  "content.js",
+  "options.html",
+  "options.js",
+  "styles.css",
 ];
 
 // Copy files
-filesToCopy.forEach(file => {
+filesToCopy.forEach((file) => {
   if (fs.existsSync(file)) {
     fs.copyFileSync(file, path.join(buildDir, file));
     console.log(`✅ Copied: ${file}`);
@@ -32,26 +32,23 @@ filesToCopy.forEach(file => {
 });
 
 // Copy icons directory
-if (fs.existsSync('icons')) {
-  const iconsDir = path.join(buildDir, 'icons');
+if (fs.existsSync("icons")) {
+  const iconsDir = path.join(buildDir, "icons");
   if (!fs.existsSync(iconsDir)) {
     fs.mkdirSync(iconsDir);
   }
-  
-  const iconFiles = fs.readdirSync('icons');
-  iconFiles.forEach(icon => {
-    fs.copyFileSync(
-      path.join('icons', icon), 
-      path.join(iconsDir, icon)
-    );
+
+  const iconFiles = fs.readdirSync("icons");
+  iconFiles.forEach((icon) => {
+    fs.copyFileSync(path.join("icons", icon), path.join(iconsDir, icon));
   });
   console.log(`✅ Copied: icons/ (${iconFiles.length} files)`);
 }
 
 // Optional: Copy LICENSE
-if (fs.existsSync('LICENSE')) {
-  fs.copyFileSync('LICENSE', path.join(buildDir, 'LICENSE'));
-  console.log('✅ Copied: LICENSE');
+if (fs.existsSync("LICENSE")) {
+  fs.copyFileSync("LICENSE", path.join(buildDir, "LICENSE"));
+  console.log("✅ Copied: LICENSE");
 }
 
 console.log(`\n🎉 Build complete!`);

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
+import fs from "fs";
 
 function rimraf(dir) {
   if (fs.existsSync(dir)) {
@@ -9,9 +9,9 @@ function rimraf(dir) {
   }
 }
 
-console.log('🧹 Cleaning build artifacts...');
+console.log("🧹 Cleaning build artifacts...");
 
 // Clean directories
-['build', 'dist', 'temp_package'].forEach(rimraf);
+["build", "dist", "temp_package"].forEach(rimraf);
 
-console.log('✅ Clean complete!');
+console.log("✅ Clean complete!");

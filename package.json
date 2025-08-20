@@ -19,11 +19,13 @@
     "social-media",
     "time-tracking"
   ],
-  "author": "Your Name",
+  "author": "Christopher Blodgett",
   "license": "MIT",
+  "type": "module",
   "devDependencies": {
-    "eslint": "^8.50.0",
-    "prettier": "^3.0.0",
-    "web-ext": "^7.8.0"
+    "@eslint/js": "^9.33.0",
+    "eslint": "^9.33.0",
+    "prettier": "^3.6.2",
+    "web-ext": "^8.9.0"
   }
 }

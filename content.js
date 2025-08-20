@@ -11,14 +11,14 @@ const DEFAULT_MESSAGES = [
   "You're not stuck—you're just scrolling.",
   "Tiny nudge: ship something instead.",
   "Imagine if this were reps at the gym. Feeling it yet?",
-  "Close me and take one step on your real goal."
+  "Close me and take one step on your real goal.",
 ];
 
 const BAR_ID = "nagminder-bar";
 let state = {
   settings: null,
   times: null,
-  meta: null
+  meta: null,
 };
 
 // Build bar
@@ -53,12 +53,35 @@ function ensureBar() {
   document.documentElement.appendChild(bar);
 
   bar.querySelector(".nm-snooze").addEventListener("click", async () => {
-    await chrome.runtime.sendMessage({ type: "nm_snooze", minutes: (state.settings?.snoozeMinutes || 15) });
-    hideBar();
+    try {
+      if (!chrome.runtime?.id) return;
+      const domain = location.hostname.replace(/^www\./, "");
+      await chrome.runtime.sendMessage({
+        type: "nm_snooze",
+        minutes: state.settings?.snoozeMinutes || 15,
+        domain: domain,
+      });
+      hideBar();
+    } catch (e) {
+      console.log(
+        "NagMinder: Could not snooze, background script not available"
+      );
+    }
   });
   bar.querySelector(".nm-pause").addEventListener("click", async () => {
-    await chrome.runtime.sendMessage({ type: "nm_pause_today" });
-    hideBar();
+    try {
+      if (!chrome.runtime?.id) return;
+      const domain = location.hostname.replace(/^www\./, "");
+      await chrome.runtime.sendMessage({
+        type: "nm_pause_today",
+        domain: domain,
+      });
+      hideBar();
+    } catch (e) {
+      console.log(
+        "NagMinder: Could not pause, background script not available"
+      );
+    }
   });
   bar.querySelector(".nm-close").addEventListener("click", () => {
     bar.style.display = "none";
@@ -69,7 +92,7 @@ function ensureBar() {
     const detailed = bar.querySelector(".nm-detailed");
     const expandBtn = bar.querySelector(".nm-expand");
     const isExpanded = detailed.style.display !== "none";
-    
+
     detailed.style.display = isExpanded ? "none" : "block";
     expandBtn.textContent = isExpanded ? "•••" : "×";
     expandBtn.title = isExpanded ? "Show more stats" : "Hide stats";
@@ -90,7 +113,7 @@ function showBar() {
 
 function hostMatches(domains) {
   const host = location.hostname.replace(/^www\./, "");
-  return domains.some(d => host === d || host.endsWith("." + d));
+  return domains.some((d) => host === d || host.endsWith("." + d));
 }
 
 function formatMinutes(mins) {
@@ -109,18 +132,37 @@ function pickMessage() {
 
 async function refresh() {
   try {
+    // Check if extension context is valid
+    if (!chrome.runtime?.id) {
+      console.log("NagMinder: Extension context invalidated");
+      return;
+    }
+
     const resp = await chrome.runtime.sendMessage({ type: "nm_get_state" });
-    state = resp || state;
-    const domains = (state.settings?.domains ?? []);
-    const enabled = !!(state.settings?.enabled);
-    const snoozedOrPaused = state.meta && (Date.now() < (state.meta.snoozeUntil || 0) || state.meta.pausedToday);
+
+    // Handle case where background script returns undefined/null
+    if (!resp) {
+      console.log("NagMinder: No response from background script");
+      return;
+    }
+
+    state = resp;
+    const domains = state.settings?.domains ?? [];
+    const enabled = !!state.settings?.enabled;
+
+    // Check if this specific domain is snoozed/paused
+    const host = location.hostname.replace(/^www\./, "");
+    const domainMeta = state.meta?.domains?.[host];
+    const snoozedOrPaused =
+      domainMeta &&
+      (Date.now() < (domainMeta.snoozeUntil || 0) || domainMeta.pausedToday);
 
     if (!enabled || !hostMatches(domains) || snoozedOrPaused) {
       hideBar();
       return;
     }
 
-    const host = location.hostname.replace(/^www\./, "");
+    // Host already defined above
     const t = state.times?.[host];
     if (!t) {
       // If we're on a tracked site but no counters yet, still show bar with zeros
@@ -132,7 +174,16 @@ async function refresh() {
     showBar();
     render(t);
   } catch (e) {
-    // If background isn't available yet, quietly ignore
+    // Check for specific connection errors
+    if (
+      e.message?.includes("Could not establish connection") ||
+      e.message?.includes("Extension context invalidated") ||
+      e.message?.includes("Receiving end does not exist")
+    ) {
+      console.log("NagMinder: Background script not ready, will retry...");
+      return;
+    }
+    console.error("NagMinder refresh error:", e);
   }
 }
 
@@ -140,9 +191,11 @@ function render(t) {
   const bar = ensureBar();
   bar.querySelector(".nm-today").textContent = `Today: ${formatMinutes(t.day)}`;
   bar.querySelector(".nm-week").textContent = `Week: ${formatMinutes(t.week)}`;
-  bar.querySelector(".nm-month").textContent = `Month: ${formatMinutes(t.month)}`;
+  bar.querySelector(".nm-month").textContent =
+    `Month: ${formatMinutes(t.month)}`;
   bar.querySelector(".nm-year").textContent = `Year: ${formatMinutes(t.year)}`;
-  bar.querySelector(".nm-alltime").textContent = `All time: ${formatMinutes(t.allTime)}`;
+  bar.querySelector(".nm-alltime").textContent =
+    `All time: ${formatMinutes(t.allTime)}`;
   bar.querySelector(".nm-message").textContent = pickMessage();
 }
 
@@ -155,6 +208,30 @@ chrome.runtime.onMessage.addListener((msg) => {
   }
 });
 
-// Initial + periodic refresh
-refresh();
+// Initial load with retry
+let retryCount = 0;
+const maxRetries = 5;
+
+async function initialLoad() {
+  try {
+    await refresh();
+  } catch (e) {
+    retryCount++;
+    if (retryCount < maxRetries) {
+      console.log(
+        `NagMinder: Retry ${retryCount}/${maxRetries} in 1 second...`
+      );
+      setTimeout(initialLoad, 1000);
+    } else {
+      console.log(
+        "NagMinder: Max retries reached, background script may not be available"
+      );
+    }
+  }
+}
+
+// Start initial load
+initialLoad();
+
+// Periodic refresh
 setInterval(refresh, 5000);
