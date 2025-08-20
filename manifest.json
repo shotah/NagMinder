@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "NagMinder",
   "description": "A playful on-page nag bar that tracks your social media time (today/week/month) and nudges you to do better.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "permissions": ["storage", "tabs", "idle"],
   "background": {
     "service_worker": "background.js"
