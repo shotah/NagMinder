@@ -6,7 +6,7 @@
     "lint": "eslint . --ext .js --ignore-pattern node_modules --ignore-pattern build --ignore-pattern dist --ignore-pattern messages.js",
     "lint:fix": "npm run lint -- --fix",
     "test": "npm run lint && node test/validate.js",
-    "validate": "web-ext lint --source-dir=. --ignore-files=node_modules,build,dist,Makefile,package*.json,*.md,the_plan.md,scripts --warnings-as-errors=false",
+    "validate": "node scripts/validate.js",
     "clean": "node scripts/clean.js",
     "build": "npm run clean && node scripts/build.js",
     "package": "npm run build && node scripts/package.js",

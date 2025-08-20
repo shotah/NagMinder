@@ -78,7 +78,7 @@ function hostnameFromUrl(url) {
   try {
     const u = new URL(url);
     return u.hostname.replace(/^www\./, "");
-  } catch (_) {
+  } catch {
     return null;
   }
 }
@@ -244,11 +244,11 @@ async function tick() {
             // Content script may not be ready, ignore
           });
       }
-    } catch (e) {
+    } catch {
       // Tab may not be accessible, ignore
     }
-  } catch (e) {
-    console.error("NagMinder tick error:", e);
+  } catch {
+    // Tick error occurred
   }
 }
 
@@ -298,7 +298,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ ok: false, error: "unknown_message" });
       }
     } catch (e) {
-      console.error("NagMinder message handler error:", e);
+      // Message handler error occurred
       sendResponse({ ok: false, error: e.message });
     }
   })();

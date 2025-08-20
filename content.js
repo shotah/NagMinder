@@ -62,10 +62,8 @@ function ensureBar() {
         domain: domain,
       });
       hideBar();
-    } catch (e) {
-      console.log(
-        "NagMinder: Could not snooze, background script not available"
-      );
+    } catch {
+      // Snooze failed silently
     }
   });
   bar.querySelector(".nm-pause").addEventListener("click", async () => {
@@ -77,10 +75,8 @@ function ensureBar() {
         domain: domain,
       });
       hideBar();
-    } catch (e) {
-      console.log(
-        "NagMinder: Could not pause, background script not available"
-      );
+    } catch {
+      // Pause failed silently
     }
   });
   bar.querySelector(".nm-close").addEventListener("click", () => {
@@ -134,7 +130,7 @@ async function refresh() {
   try {
     // Check if extension context is valid
     if (!chrome.runtime?.id) {
-      console.log("NagMinder: Extension context invalidated");
+      // Extension context invalidated
       return;
     }
 
@@ -142,7 +138,7 @@ async function refresh() {
 
     // Handle case where background script returns undefined/null
     if (!resp) {
-      console.log("NagMinder: No response from background script");
+      // No response from background script
       return;
     }
 
@@ -180,10 +176,10 @@ async function refresh() {
       e.message?.includes("Extension context invalidated") ||
       e.message?.includes("Receiving end does not exist")
     ) {
-      console.log("NagMinder: Background script not ready, will retry...");
+      // Background script not ready, will retry
       return;
     }
-    console.error("NagMinder refresh error:", e);
+    // Extension error occurred
   }
 }
 
@@ -215,17 +211,13 @@ const maxRetries = 5;
 async function initialLoad() {
   try {
     await refresh();
-  } catch (e) {
+  } catch {
     retryCount++;
     if (retryCount < maxRetries) {
-      console.log(
-        `NagMinder: Retry ${retryCount}/${maxRetries} in 1 second...`
-      );
+      // Retrying connection
       setTimeout(initialLoad, 1000);
     } else {
-      console.log(
-        "NagMinder: Max retries reached, background script may not be available"
-      );
+      // Max retries reached
     }
   }
 }
