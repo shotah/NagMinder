@@ -5,12 +5,14 @@ Thank you for your interest in contributing to NagMinder! This document provides
 ## Development Setup
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/yourusername/NagMinder.git
    cd NagMinder
    ```
 
 2. **Install dependencies:**
+
    ```bash
    make install-deps
    # or
@@ -28,6 +30,7 @@ Thank you for your interest in contributing to NagMinder! This document provides
 ### Making Changes
 
 1. **Create a feature branch:**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -35,6 +38,7 @@ Thank you for your interest in contributing to NagMinder! This document provides
 2. **Make your changes** following our coding standards
 
 3. **Test your changes:**
+
    ```bash
    make test
    ```
@@ -81,11 +85,12 @@ Thank you for your interest in contributing to NagMinder! This document provides
 ### Submitting Changes
 
 1. **Commit your changes:**
+
    ```bash
    git add .
    git commit -m "feat: add your feature description"
    ```
-   
+
    Use conventional commit messages:
    - `feat:` for new features
    - `fix:` for bug fixes
@@ -94,6 +99,7 @@ Thank you for your interest in contributing to NagMinder! This document provides
    - `test:` for adding tests
 
 2. **Push to your fork:**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -108,6 +114,7 @@ Thank you for your interest in contributing to NagMinder! This document provides
 ## Architecture Notes
 
 ### File Structure
+
 - `manifest.json` - Extension manifest (MV3)
 - `background.js` - Service worker for time tracking
 - `content.js` - Injected script for nag bar
@@ -116,6 +123,7 @@ Thank you for your interest in contributing to NagMinder! This document provides
 - `icons/` - Extension icons
 
 ### Key Concepts
+
 - **Time Tracking**: Background service worker increments counters every `tickSeconds`
 - **Idle Detection**: Uses `chrome.idle` API to pause tracking when user is away
 - **Storage**: Settings in `chrome.storage.sync`, data in `chrome.storage.local`

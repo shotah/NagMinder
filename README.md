@@ -6,6 +6,7 @@
 A playful on-page **nag bar** that tracks how long you've been on social sites and nudges you with cheeky reminders.
 
 **What you get**
+
 - Time on current site **Today / This Week / This Month**
 - A persistent **bar at the top** of social pages
 - **Funny nag lines** that rotate while you browse
@@ -28,7 +29,7 @@ A playful on-page **nag bar** that tracks how long you've been on social sites a
 
 ## How It Works
 
-- A background **service worker** ticks every `tickSeconds` (default 5s).  
+- A background **service worker** ticks every `tickSeconds` (default 5s).
 - If your **active tab** is a tracked domain and you’re **not idle** (using the `chrome.idle` API, 60s threshold), the extension increments counters for:
   - **day** (resets at midnight local time)
   - **week** (ISO week number, resets on week change)
@@ -81,7 +82,7 @@ NagMinder/
 
 ## Privacy
 
-- No analytics. No network requests.  
+- No analytics. No network requests.
 - All usage data stays in **`chrome.storage.local`** on your device.
 
 ---
@@ -117,6 +118,7 @@ npm run package
 ### Chrome Web Store Publishing
 
 #### Quick Method (Cross-Platform)
+
 ```bash
 # Works on Windows, macOS, Linux
 npm run package
@@ -125,6 +127,7 @@ npm run package
 #### Manual Steps
 
 1. **Prepare for submission:**
+
    ```bash
    npm run package
    ```
@@ -143,7 +146,6 @@ npm run package
    - **Summary**: A playful nag bar that tracks social media time and nudges you to be more productive
    - **Category**: Productivity
    - **Language**: English
-   
 5. **Add required assets:**
    - **Icon**: Upload your 128x128 icon
    - **Screenshots**: Take 1-5 screenshots showing the extension in action
@@ -160,6 +162,7 @@ npm run package
 #### Store Listing Template
 
 **Description:**
+
 ```
 Track your social media time with a gentle, humorous nag bar. NagMinder shows how long you've spent on distracting sites today, this week, and this month - with funny reminders to help you stay focused.
 
