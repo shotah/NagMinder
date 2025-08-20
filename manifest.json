@@ -3,11 +3,7 @@
   "name": "NagMinder",
   "description": "A playful on-page nag bar that tracks your social media time (today/week/month) and nudges you to do better.",
   "version": "1.0.0",
-  "permissions": [
-    "storage",
-    "tabs",
-    "idle"
-  ],
+  "permissions": ["storage", "tabs", "idle"],
   "background": {
     "service_worker": "background.js"
   },
@@ -20,14 +16,20 @@
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "*://*.facebook.com/*",
+        "*://*.x.com/*",
+        "*://*.twitter.com/*",
+        "*://*.linkedin.com/*",
+        "*://*.instagram.com/*",
+        "*://*.reddit.com/*",
+        "*://*.tiktok.com/*",
+        "*://*.youtube.com/*",
+        "*://*.pinterest.com/*",
+        "*://*.snapchat.com/*",
+        "*://*.strava.com/*"
       ],
-      "js": [
-        "content.js"
-      ],
-      "css": [
-        "styles.css"
-      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
       "run_at": "document_end"
     }
   ],
