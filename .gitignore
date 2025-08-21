@@ -47,4 +47,6 @@ Thumbs.db
 # Version files
 .nvmrc
 
-
+# Playwright
+test-results/
+playwright-report/
