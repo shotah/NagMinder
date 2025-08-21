@@ -3,7 +3,7 @@
 [![CI](https://github.com/shotah/NagMinder/actions/workflows/ci.yml/badge.svg)](https://github.com/shotah/NagMinder/actions/workflows/ci.yml)
 [![Release](https://github.com/shotah/NagMinder/actions/workflows/release.yml/badge.svg)](https://github.com/shotah/NagMinder/actions/workflows/release.yml)
 
-A playful on-page **nag bar** that tracks how long you've been on social sites and nudges you with cheeky reminders.
+A playful on-page **nag bar** that tracks how long you've been on social media sites and nudges you with cheeky reminders to be more productive.
 
 **What you get**
 
