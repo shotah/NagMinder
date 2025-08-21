@@ -1,6 +1,6 @@
 # Privacy Policy for NagMinder Chrome Extension
 
-**Last Updated:** December 2024
+**Last Updated:** August 2025
 
 ## Overview
 
