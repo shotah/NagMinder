@@ -193,6 +193,10 @@ function render(t) {
   bar.querySelector(".nm-alltime").textContent =
     `All time: ${formatMinutes(t.allTime)}`;
   bar.querySelector(".nm-message").textContent = pickMessage();
+
+  // Update snooze button text with configured time
+  const snoozeMinutes = state.settings?.snoozeMinutes || 15;
+  bar.querySelector(".nm-snooze").textContent = `Snooze ${snoozeMinutes}m`;
 }
 
 // Listen for updates from background to refresh faster
