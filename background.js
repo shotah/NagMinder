@@ -57,6 +57,7 @@ const DEFAULT_SETTINGS = {
     "strava.com",
   ],
   snoozeMinutes: 15,
+  idleThresholdMinutes: 5, // How long before considering user idle
 };
 
 const initialMeta = {
@@ -98,21 +99,21 @@ async function setSettings(newSettings) {
 }
 
 async function getTimes() {
-  const { [TIMES_KEY]: t } = await chrome.storage.local.get(TIMES_KEY);
+  const { [TIMES_KEY]: t } = await chrome.storage.sync.get(TIMES_KEY);
   return t ?? {};
 }
 
 async function setTimes(times) {
-  await chrome.storage.local.set({ [TIMES_KEY]: times });
+  await chrome.storage.sync.set({ [TIMES_KEY]: times });
 }
 
 async function getMeta() {
-  const { [META_KEY]: m } = await chrome.storage.local.get(META_KEY);
+  const { [META_KEY]: m } = await chrome.storage.sync.get(META_KEY);
   return m ?? initialMeta;
 }
 
 async function setMeta(meta) {
-  await chrome.storage.local.set({ [META_KEY]: meta });
+  await chrome.storage.sync.set({ [META_KEY]: meta });
 }
 
 // Helper functions for per-domain snooze/pause
@@ -157,7 +158,8 @@ async function tick() {
     if (!settings.enabled) return;
 
     // Idle or unfocused? Don't count.
-    const idleState = await chrome.idle.queryState(60); // idle if no input for 60s
+    const idleThresholdSeconds = (settings.idleThresholdMinutes || 5) * 60;
+    const idleState = await chrome.idle.queryState(idleThresholdSeconds);
     if (idleState !== "active") return;
 
     const url = await getActiveUrl();
@@ -292,7 +294,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           sendResponse({ ok: false, error: "domain_required" });
         }
       } else if (msg?.type === "nm_reset_all") {
-        await chrome.storage.local.remove([TIMES_KEY, META_KEY]);
+        await chrome.storage.sync.remove([TIMES_KEY, META_KEY]);
         sendResponse({ ok: true });
       } else {
         sendResponse({ ok: false, error: "unknown_message" });

@@ -2,36 +2,37 @@
 
 ## Store Title
 
-**NagMinder - Social Media Time Tracker**
+**NagMinder - Mindful Time Tracker**
 
 ## Short Description
 
-Track time on social media sites and get gentle productivity reminders.
+Track your social media time with gentle awareness reminders for better digital wellness.
 
 ## Detailed Description
 
-NagMinder is a productivity extension that helps you become more aware of time spent on social media websites. It displays a friendly reminder bar showing your daily, weekly, monthly, and yearly usage statistics.
+NagMinder is a mindful productivity extension that helps you develop awareness of time spent on social media websites. It displays a subtle information bar showing your usage statistics to promote conscious browsing habits.
 
 **Key Features:**
-✅ **Time Tracking** - Monitor time spent on social media sites
-✅ **Productivity Reminders** - Gentle nudges to help you stay focused  
-✅ **Customizable Sites** - Configure which websites to track
-✅ **Privacy First** - All data stays on your device
-✅ **Snooze Options** - Temporarily hide reminders when needed
+✅ **Time Awareness** - Monitor time spent on social media sites with clear statistics
+✅ **Mindful Browsing** - Optional gentle reminders to encourage intentional usage  
+✅ **Customizable Tracking** - Configure which websites to monitor
+✅ **Complete Privacy** - All data stays locally on your device
+✅ **User Control** - Easy snooze and pause options when you need uninterrupted browsing
 
 **How it works:**
 
 1. Install the extension
 2. Visit any social media website
-3. See a friendly reminder bar at the top showing your usage time
-4. Use the snooze or pause features when you need focused browsing
-5. View detailed statistics by clicking the expand button
+3. See a subtle information bar at the top showing your usage statistics
+4. Use optional snooze or pause features when you need uninterrupted browsing
+5. View detailed time breakdowns by clicking the expand button
 
 **Perfect for:**
 
-- Students wanting to limit social media during study time
-- Professionals maintaining work-life balance
-- Anyone looking to be more mindful of their internet usage
+- Students wanting to develop better study habits
+- Professionals seeking work-life balance awareness
+- Anyone interested in mindful technology usage
+- Users practicing digital wellness
 
 **Privacy & Data:**
 
@@ -46,7 +47,7 @@ NagMinder is a productivity extension that helps you become more aware of time s
 
 ## Keywords (comma-separated)
 
-productivity, time tracking, social media, focus, mindfulness, time management, digital wellness, screen time
+productivity, time tracking, social media, mindfulness, digital wellness, time management, screen time awareness, conscious browsing
 
 ## Target Audience
 

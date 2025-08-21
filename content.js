@@ -2,16 +2,16 @@
 
 // Import messages directly since ES6 modules aren't supported in content scripts
 const DEFAULT_MESSAGES = [
-  "Come on man, don't you have something better to do?",
-  "Your future self is facepalming right now.",
-  "Another minute won't hurt? That's what you said 30 minutes ago.",
-  "Scrolling won't solve your problems.",
-  "Be honest—was this what you planned to do today?",
-  "Hey, Productivity called. It misses you.",
-  "You're not stuck—you're just scrolling.",
-  "Tiny nudge: ship something instead.",
-  "Imagine if this were reps at the gym. Feeling it yet?",
-  "Close me and take one step on your real goal.",
+  "Just saying... your goals are waiting for you.",
+  "This scroll session is brought to you by procrastination.",
+  "Plot twist: you could be doing something amazing right now.",
+  "Fun fact: your future self is watching.",
+  "Consider this your friendly reality check.",
+  "Reminder: you're the main character of your own story.",
+  "Time update: still ticking away while you scroll.",
+  "Your productivity coach has entered the chat.",
+  "Breaking news: your to-do list misses you.",
+  "Gentle nudge from your better angels.",
 ];
 
 const BAR_ID = "nagminder-bar";

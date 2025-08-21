@@ -35,7 +35,7 @@ _Expandable view showing week, month, year, and all-time usage statistics_
 4. Click **Load unpacked** → select the `NagMinder/` folder.
 5. Visit a tracked site (e.g., `reddit.com`, `x.com`, `instagram.com`) — the Nag bar shows at the top.
 
-> Data: settings sync via `chrome.storage.sync`. Usage time is stored locally via `chrome.storage.local` and never leaves your machine.
+> Data: all settings and usage time sync via `chrome.storage.sync`. Data persists across browser sessions and syncs across your Chrome devices if sync is enabled.
 
 ---
 
@@ -95,7 +95,7 @@ NagMinder/
 ## Privacy
 
 - No analytics. No network requests.
-- All usage data stays in **`chrome.storage.local`** on your device.
+- All usage data stays in **`chrome.storage.sync`** and can sync across your Chrome devices (if Chrome sync is enabled).
 
 ---
 

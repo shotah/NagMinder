@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "NagMinder",
-  "description": "A productivity tool that tracks time spent on social media sites and provides gentle reminders to help you stay focused.",
-  "version": "1.1.0",
+  "description": "A mindful time tracking tool that helps you develop awareness of social media usage through gentle statistics and optional reminders.",
+  "version": "1.1.1",
   "permissions": ["storage", "tabs", "idle"],
   "background": {
     "service_worker": "background.js"
