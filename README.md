@@ -7,11 +7,23 @@ A playful on-page **nag bar** that tracks how long you've been on social sites a
 
 **What you get**
 
-- Time on current site **Today / This Week / This Month**
+- Time on current site **Today / This Week / This Month / This Year / All Time**
 - A persistent **bar at the top** of social pages
 - **Funny nag lines** that rotate while you browse
 - **Snooze 15m** and **Pause Today** buttons
 - Configurable domains, tick interval, and snooze time via **Options**
+
+## 📸 NagMinder in Action
+
+### Basic Time Tracking
+
+![NagMinder on Reddit](screenshots/reddit-with-times.png)
+_NagMinder showing time spent on Reddit with a playful nudge message_
+
+### Detailed Stats (Click •••)
+
+![NagMinder Expanded Stats](screenshots/reddit-expanded-with-times.png)
+_Expandable view showing week, month, year, and all-time usage statistics_
 
 ---
 
