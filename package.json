@@ -13,7 +13,9 @@
     "dev": "npm run build && echo \"Load unpacked: ./build/ in chrome://extensions/\"",
     "help": "node scripts/help.js",
     "screenshots": "npx playwright test working-screenshots",
-    "screenshots:setup": "npx playwright install chromium"
+    "screenshots:setup": "npx playwright install chromium",
+    "promo-tiles": "npx playwright test promo-tiles",
+    "promo-tiles:generate": "npm run promo-tiles && echo \"✅ Promo tiles generated in screenshots/\""
   },
   "keywords": [
     "chrome-extension",

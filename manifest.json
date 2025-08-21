@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NagMinder",
-  "description": "A mindful time tracking tool that helps you develop awareness of social media usage through gentle statistics and optional reminders.",
+  "description": "A mindful time tracking tool that helps you develop awareness of social media usage through gentle statistics.",
   "version": "1.1.1",
   "permissions": ["storage", "tabs", "idle"],
   "background": {
