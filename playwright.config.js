@@ -21,6 +21,16 @@ export default defineConfig({
       name: "screenshots",
       use: {
         ...devices["Desktop Chrome"],
+        viewport: { width: 1280, height: 800 }, // Chrome Web Store size
+        channel: "chrome",
+        launchOptions: {
+          args: [
+            `--disable-extensions-except=${process.cwd()}/build`,
+            `--load-extension=${process.cwd()}/build`,
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+          ],
+        },
       },
     },
   ],

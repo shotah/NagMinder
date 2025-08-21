@@ -47,6 +47,6 @@ Thumbs.db
 # Version files
 .nvmrc
 
-# Playwright
-test-results/
+# Playwright artifacts (keep test files, ignore generated artifacts)
 playwright-report/
+test-results/

@@ -2,6 +2,7 @@ import { test as base, chromium } from "@playwright/test";
 import path from "path";
 
 export const test = base.extend({
+  // eslint-disable-next-line no-empty-pattern
   context: async ({}, use) => {
     const pathToExtension = path.join(process.cwd(), "build");
     const context = await chromium.launchPersistentContext("", {

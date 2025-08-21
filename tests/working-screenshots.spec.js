@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures.js";
+import { test } from "./fixtures.js";
 
 test.describe("Working NagMinder Screenshots", () => {
   async function setDemoDataViaBackground(context) {
@@ -104,7 +104,7 @@ test.describe("Working NagMinder Screenshots", () => {
       console.log(`📊 Month: "${monthText}"`);
       console.log(`📊 Year: "${yearText}"`);
       console.log(`📊 All time: "${allTimeText}"`);
-    } catch (e) {
+    } catch {
       console.log("Could not expand stats");
     }
 

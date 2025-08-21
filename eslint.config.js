@@ -31,7 +31,13 @@ export default [
     },
   },
   {
-    files: ["scripts/**/*.js", "test/**/*.js", "eslint.config.js"],
+    files: [
+      "scripts/**/*.js",
+      "test/**/*.js",
+      "tests/**/*.js",
+      "eslint.config.js",
+      "playwright.config.js",
+    ],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -43,6 +49,9 @@ export default [
         __filename: "readonly",
         Buffer: "readonly",
         global: "readonly",
+        // Playwright globals
+        test: "readonly",
+        expect: "readonly",
       },
     },
     rules: {

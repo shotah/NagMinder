@@ -12,7 +12,7 @@
     "package": "npm run build && node scripts/package.js",
     "dev": "npm run build && echo \"Load unpacked: ./build/ in chrome://extensions/\"",
     "help": "node scripts/help.js",
-    "screenshots": "npx playwright test screenshots",
+    "screenshots": "npx playwright test working-screenshots",
     "screenshots:setup": "npx playwright install chromium"
   },
   "keywords": [
